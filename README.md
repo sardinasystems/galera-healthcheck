@@ -1,7 +1,7 @@
 galera-healthcheck
 ==================
 
-[![Build Status](https://travis-ci.org/cloudfoundry-incubator/galera-healthcheck.svg?branch=master)](https://travis-ci.org/cloudfoundry-incubator/galera-healthcheck)
+![Build Status](https://github.com/sardinasystems/galera-healthcheck/actions/workflows/test.yml/badge.svg)
 
 
 This go-based process is designed to run on a MariaDB Galera node and monitor the health of the node.
