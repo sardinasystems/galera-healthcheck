@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log/slog"
+	"net/http"
 	"os"
 	"os/signal"
 	"runtime"
@@ -13,6 +14,7 @@ import (
 
 	"github.com/alecthomas/kong"
 	"github.com/go-sql-driver/mysql"
+	"github.com/samber/slog-http"
 )
 
 var cli struct {
@@ -85,7 +87,28 @@ func main() {
 		}()
 	}
 
-	time.Sleep(1 * time.Second)
+	mux := http.NewServeMux()
+	srv := http.Server{
+		Addr:    cli.Listen,
+		Handler: sloghttp.New(lg)(mux),
+	}
+
 	_ = db
-	_ = ctx
+
+	go func() {
+		err := srv.ListenAndServe()
+		if err != nil {
+			lg.Error("Serve failed")
+		}
+	}()
+
+	// Wait for termination signal
+	<-ctx.Done()
+
+	// Graceful shutdown
+	ctx2, cancel2 := context.WithTimeout(context.Background(), 1*time.Second)
+	defer cancel2()
+
+	err = srv.Shutdown(ctx2)
+	kctx.FatalIfErrorf(err)
 }
