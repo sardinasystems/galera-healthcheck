@@ -49,7 +49,7 @@ func main() {
 		}),
 		kong.DefaultEnvars("GALERA_HEALTH"),
 		kong.Vars{
-			"version": version.Print("sd2inetd"),
+			"version": version.Print("galera-healthcheck"),
 		},
 	)
 	kctx.Command()
