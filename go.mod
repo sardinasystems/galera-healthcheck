@@ -8,6 +8,7 @@ require (
 	github.com/DATA-DOG/go-sqlmock v1.5.2
 	github.com/alecthomas/kong v1.2.1
 	github.com/go-sql-driver/mysql v1.8.1
+	github.com/prometheus/common v0.60.0
 	github.com/samber/slog-http v1.4.3
 	github.com/stretchr/testify v1.9.0
 )

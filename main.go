@@ -16,6 +16,7 @@ import (
 
 	"github.com/alecthomas/kong"
 	"github.com/go-sql-driver/mysql"
+	"github.com/prometheus/common/version"
 	sloghttp "github.com/samber/slog-http"
 
 	"github.com/sardinasystems/galera-healthcheck/healthcheck"
@@ -47,6 +48,9 @@ func main() {
 			Compact: false,
 		}),
 		kong.DefaultEnvars("GALERA_HEALTH"),
+		kong.Vars{
+			"version": version.Print("sd2inetd"),
+		},
 	)
 	kctx.Command()
 

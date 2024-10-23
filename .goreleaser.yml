@@ -4,7 +4,13 @@ builds:
     env:
     - CGO_ENABLED=0
     main: main.go
-    ldflags: '-s -w -X github.com/sensu/sensu-plugin-sdk/version.version={{.Version}} -X github.com/sensu/sensu-plugin-sdk/version.commit={{.Commit}} -X github.com/sensu/sensu-plugin-sdk/version.date={{.Date}}'
+    ldflags: >
+      -w -s
+      -X github.com/prometheus/common/version.Version={{ .Version }}
+      -X github.com/prometheus/common/version.Revision={{ .Commit }}
+      -X github.com/prometheus/common/version.Branch={{ .Branch }}
+      -X github.com/prometheus/common/version.BuildUser=reproducible
+      -X github.com/prometheus/common/version.BuildDate={{ .Date }}
     binary: bin/{{ .ProjectName }}
     goos:
       - linux
