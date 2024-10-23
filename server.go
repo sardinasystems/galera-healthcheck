@@ -7,11 +7,12 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"runtime"
 	"strconv"
 
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/sttts/galera-healthcheck/healthcheck"
 	. "github.com/sttts/galera-healthcheck/logger"
-	_ "github.com/go-sql-driver/mysql"
 )
 
 var serverPort = flag.Int(
@@ -73,6 +74,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	runtime.GOMAXPROCS(1)
+
 	flag.Parse()
 
 	err := ioutil.WriteFile(*pidfile, []byte(strconv.Itoa(os.Getpid())), 0644)
