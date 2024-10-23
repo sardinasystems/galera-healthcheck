@@ -5,6 +5,7 @@ go 1.22
 toolchain go1.23.1
 
 require (
+	github.com/alecthomas/kong v1.2.1
 	github.com/cloudfoundry-incubator/galera-healthcheck v0.0.0-20220901215914-d591811a0fba
 	github.com/erikstmartin/go-testdb v0.0.0-20160219214506-8d10e4a1bae5
 	github.com/go-sql-driver/mysql v1.8.1

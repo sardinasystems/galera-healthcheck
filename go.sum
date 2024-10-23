@@ -3,6 +3,8 @@ code.cloudfoundry.org/lager v2.0.0+incompatible/go.mod h1:O2sS7gKP3HM2iemG+Enwvy
 filippo.io/edwards25519 v1.1.0 h1:FNf4tywRC1HmFuKW5xopWpigGjJKiJSV0Cqo0cJWDaA=
 filippo.io/edwards25519 v1.1.0/go.mod h1:BxyFTGdWcka3PhytdK4V28tE5sGfRvvvRV7EaN4VDT4=
 github.com/DATA-DOG/go-sqlmock v1.5.0/go.mod h1:f/Ixk793poVmq4qj/V1dPUg2JEAKC73Q5eFN3EC/SaM=
+github.com/alecthomas/kong v1.2.1 h1:E8jH4Tsgv6wCRX2nGrdPyHDUCSG83WH2qE4XLACD33Q=
+github.com/alecthomas/kong v1.2.1/go.mod h1:rKTSFhbdp3Ryefn8x5MOEprnRFQ7nlmMC01GKhehhBM=
 github.com/bmizerany/pat v0.0.0-20210406213842-e4b6760bdd6f/go.mod h1:8rLXio+WjiTceGBHIoTvn60HIbs7Hm7bcHjyrSqYB9c=
 github.com/cloudfoundry-incubator/galera-healthcheck v0.0.0-20220901215914-d591811a0fba h1:naAWkVke5gj2L4spYt1Jn6HCN97/gfyBDNK1G5MnDxs=
 github.com/cloudfoundry-incubator/galera-healthcheck v0.0.0-20220901215914-d591811a0fba/go.mod h1:nuJtjHPWiUbYlRq5bFzcH47sZJW5zSD3UGxX9A4rhm8=

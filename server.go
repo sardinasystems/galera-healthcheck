@@ -73,7 +73,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	LogWithTimestamp(msg)
 }
 
-func main() {
+func _main() {
 	runtime.GOMAXPROCS(1)
 
 	flag.Parse()
