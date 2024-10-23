@@ -1,6 +1,7 @@
 package healthcheck
 
 import (
+	"context"
 	"database/sql"
 )
 
@@ -26,11 +27,11 @@ func New(db *sql.DB) *Healthchecker {
 	}
 }
 
-func (h *Healthchecker) Check(AvailableWhenDonor, AvailableWhenReadOnly bool) (bool, string, error) {
+func (h *Healthchecker) Check(ctx context.Context, AvailableWhenDonor, AvailableWhenReadOnly bool) (bool, string, error) {
 	var variableName string
 	var state string
 
-	err := h.db.QueryRow("SHOW STATUS LIKE 'wsrep_local_state'").Scan(&variableName, &state)
+	err := h.db.QueryRowContext(ctx, "SHOW STATUS LIKE 'wsrep_local_state'").Scan(&variableName, &state)
 	if err != nil {
 		return false, "", err
 	}
@@ -51,7 +52,7 @@ func (h *Healthchecker) Check(AvailableWhenDonor, AvailableWhenReadOnly bool) (b
 		res, msg = true, "synced"
 		if !AvailableWhenReadOnly {
 			var roValue string
-			err = h.db.QueryRow("SHOW GLOBAL VARIABLES LIKE 'read_only'").Scan(&variableName, &roValue)
+			err = h.db.QueryRowContext(ctx, "SHOW GLOBAL VARIABLES LIKE 'read_only'").Scan(&variableName, &roValue)
 			if err != nil {
 				return false, "", err
 			}

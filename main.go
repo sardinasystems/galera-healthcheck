@@ -3,18 +3,22 @@ package main
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"log/slog"
 	"net/http"
 	"os"
 	"os/signal"
 	"runtime"
+	"strconv"
 	"syscall"
 	"time"
 
 	"github.com/alecthomas/kong"
 	"github.com/go-sql-driver/mysql"
-	"github.com/samber/slog-http"
+	sloghttp "github.com/samber/slog-http"
+
+	"github.com/sardinasystems/galera-healthcheck/healthcheck"
 )
 
 var cli struct {
@@ -93,7 +97,63 @@ func main() {
 		Handler: sloghttp.New(lg)(mux),
 	}
 
-	_ = db
+	hc := healthcheck.New(db)
+
+	queryBool := func(r *http.Request, key string, def bool) (bool, error) {
+		qv := r.URL.Query()
+		if !qv.Has(key) {
+			return def, nil
+		}
+
+		v := qv.Get(key)
+		if v == "" {
+			// ?donor_ok == ?donor_ok=1
+			return true, nil
+		}
+
+		return strconv.ParseBool(v)
+	}
+
+	makeHandler := func(defDonorOk, defReadOnlyOk bool) http.HandlerFunc {
+		return func(w http.ResponseWriter, r *http.Request) {
+			ctx := r.Context()
+
+			w.Header().Add("Content-Type", "text/plain")
+
+			donorOk, err1 := queryBool(r, "donor_ok", defDonorOk)
+			readOnlyOk, err2 := queryBool(r, "readonly_ok", defReadOnlyOk)
+			err := errors.Join(err1, err2)
+
+			if err != nil {
+				lg.ErrorContext(ctx, "Failed to parse query opts", "error", err)
+				w.WriteHeader(http.StatusBadRequest)
+				fmt.Fprintf(w, "Failed to parse query opts:\n\n%v\n", err)
+				return
+			}
+
+			healthy, msg, err := hc.Check(ctx, donorOk, readOnlyOk)
+			if err != nil {
+				lg.ErrorContext(ctx, "Query failed", "error", err)
+				w.WriteHeader(http.StatusInternalServerError)
+				fmt.Fprintf(w, "Query failed: %v", err)
+				return
+			}
+
+			code := http.StatusServiceUnavailable
+			if msg == "syncing" {
+				code = http.StatusContinue
+			} else if healthy {
+				code = http.StatusOK
+			}
+
+			w.WriteHeader(code)
+			fmt.Fprintf(w, "Galera Cluster Node status: %s", msg)
+		}
+	}
+
+	mux.HandleFunc("GET /ready", makeHandler(false, false)) // for haproxy
+	mux.HandleFunc("GET /boot", makeHandler(true, true))    // for boot health checks
+	mux.HandleFunc("GET /", makeHandler(false, false))      // default
 
 	go func() {
 		err := srv.ListenAndServe()

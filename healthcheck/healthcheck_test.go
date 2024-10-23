@@ -1,6 +1,7 @@
 package healthcheck
 
 import (
+	"context"
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
@@ -47,7 +48,9 @@ func TestHealthcheckCheck(t *testing.T) {
 			h := New(db)
 			h.wasJoined = true
 
-			healthy, msg, err := h.Check(tc.AvailableWhenDonor, tc.AvailableWhenReadOnly)
+			ctx := context.TODO()
+
+			healthy, msg, err := h.Check(ctx, tc.AvailableWhenDonor, tc.AvailableWhenReadOnly)
 			assert.NoError(err)
 			assert.Equal(tc.expected, healthy)
 			assert.Equal(tc.expectedMsg, msg)

@@ -9,4 +9,3 @@ An http endpoint is opened, by default at '/' on port 9200.
 A healthy node will return HTTP status 200, and a node that should not be accessed returns a 503.
 
 Several commandline flags are supported (see the code.)
-
