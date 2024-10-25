@@ -47,7 +47,7 @@ func main() {
 		kong.ConfigureHelp(kong.HelpOptions{
 			Compact: false,
 		}),
-		kong.DefaultEnvars("GALERA_HEALTH"),
+		kong.DefaultEnvars("HEALTHCHECK"),
 		kong.Vars{
 			"version": version.Print("galera-healthcheck"),
 		},
@@ -160,6 +160,9 @@ func main() {
 	mux.HandleFunc("GET /", makeHandler(false, false))      // default
 
 	go func() {
+		defer lg.Info("Server stopped")
+		lg.Info("Starting health check server", "listen", srv.Addr, "version", version.Info())
+
 		err := srv.ListenAndServe()
 		if err != nil {
 			lg.Error("Serve failed")
