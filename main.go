@@ -25,7 +25,7 @@ import (
 var cli struct {
 	Listen   string     `name:"listen" short:"l" default:":9200" help:"listen host:port for http server"`
 	DSN      string     `name:"dsn" help:"connection dsn (alternative to options below)"`
-	Username string     `name:"username" short:"u" help:"mysql user name"`
+	Username string     `name:"user" short:"u" help:"mysql user name"`
 	Password string     `name:"password" short:"p" help:"mysql user password"`
 	Host     string     `name:"host" short:"H" default:"localhost" help:"mysql tcp host"`
 	Port     int        `name:"port" short:"P" default:"3306" help:"mysql tcp port"`
