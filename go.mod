@@ -1,8 +1,6 @@
 module github.com/sardinasystems/galera-healthcheck
 
-go 1.22
-
-toolchain go1.23.1
+go 1.22.7
 
 require (
 	github.com/DATA-DOG/go-sqlmock v1.5.2
